@@ -17,13 +17,14 @@ from torch.optim import Adam, AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR, ReduceLROnPlateau
 from pathlib import Path
 from tqdm import tqdm
+from typing import Dict, List, Optional, Any
+import warnings
+
 try:
     import wandb
 except ImportError:
     wandb = None
     warnings.warn("wandb not installed, logging will be disabled")
-from typing import Dict, List, Optional, Any
-import warnings
 from datetime import datetime
 from collections import defaultdict
 
