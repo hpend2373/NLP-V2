@@ -1,0 +1,45 @@
+# Core dependencies
+torch>=1.10.0
+torchvision>=0.11.0
+numpy>=1.19.2
+scipy>=1.5.0
+opencv-python>=4.5.0
+pillow>=8.0.0
+tqdm>=4.60.0
+
+# 3D Processing
+trimesh>=3.9.0
+open3d>=0.13.0
+pyrender>=0.1.45
+pyglet>=1.5.0  # for pyrender
+
+# PyTorch3D - Manual installation required
+# Follow instructions at: https://github.com/facebookresearch/pytorch3d/blob/main/INSTALL.md
+# For PyTorch3D 0.5.0: pip install "git+https://github.com/facebookresearch/pytorch3d.git@v0.5.0"
+
+# Data processing
+h5py>=3.0.0
+pandas>=1.2.0
+scikit-image>=0.18.0
+matplotlib>=3.3.0
+
+# Training utilities
+tensorboard>=2.4.0
+wandb>=0.12.0
+pyyaml>=5.4.0
+omegaconf>=2.1.0
+
+# Evaluation
+chamferdist>=1.0.0
+pyquaternion>=0.9.9
+
+# Optional: Video processing
+# opencv-contrib-python>=4.5.0
+# ffmpeg-python>=0.2.0
+
+# Development tools (optional)
+pytest>=6.2.0
+black>=21.0
+flake8>=3.8.0
+ipython>=7.20.0
+jupyter>=1.0.0

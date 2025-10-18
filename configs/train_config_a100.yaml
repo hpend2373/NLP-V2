@@ -1,0 +1,131 @@
+# IKEA MEPNet Training Configuration for A100 80GB GPU
+# Optimized for maximum throughput with large VRAM
+
+# Experiment settings
+exp_name: "ikea_mepnet_a100"
+exp_dir: "./experiments/ikea_mepnet_a100"
+use_wandb: true
+wandb_project: "ikea-mepnet-a100"
+use_tensorboard: true
+
+# Model configuration
+model:
+  # Architecture - larger for A100
+  num_stacks: 4  # Increased from 2 for better performance
+  num_blocks: 2  # Increased from 1
+  num_features: 512  # Increased from 256 for better capacity
+  image_size: [640, 640]  # Larger images for better detail
+
+  # Shape conditioning
+  use_shape_condition: true
+  shape_encoding_dim: 1024  # Increased from 512
+  shape_encoder_type: "pointnet"
+
+  # Output heads
+  num_keypoints: 16
+  num_rotation_bins: 24
+  use_continuous_rotation: true
+  max_parts: 10
+  detect_parts: true
+  predict_mask: true
+  predict_depth: true  # Enable depth prediction with A100
+
+  # Training
+  intermediate_supervision: true
+
+# Data configuration
+data:
+  root_dir: "./IKEA-Manuals-at-Work"
+
+  dataset_args:
+    load_meshes: true
+    load_videos: false
+    furniture_categories: null  # All categories
+    max_parts_per_step: 10
+    image_size: [640, 640]  # Match model image size
+    normalize_scale: true
+    cache_meshes: true
+
+  augmentation:
+    # Aggressive augmentations for better generalization
+    use_crop: true
+    crop_size: [576, 576]
+    preserve_center: true
+    use_scale: true
+    scale_range: [0.8, 1.2]  # More variation
+    use_color_jitter: true
+    brightness: 0.3
+    contrast: 0.3
+    saturation: 0.3
+    hue: 0.15
+
+    # Manual-specific augmentations
+    use_manual_style: true
+    sketch_prob: 0.4
+    edge_prob: 0.3
+    binarize_prob: 0.15
+
+    # Pose augmentation
+    use_pose_noise: true
+    rot_noise_deg: 5.0
+    trans_noise_ratio: 0.05
+
+    # Normalization
+    normalize: true
+
+# Loss configuration
+loss:
+  keypoint_weight: 1.0
+  rotation_weight: 1.5  # Increased importance
+  translation_weight: 1.5
+  mask_weight: 0.8
+  part_detection_weight: 0.8
+  depth_weight: 0.5  # Enabled with depth prediction
+  use_continuous_rotation: true
+  intermediate_supervision: true
+
+# Optimization configuration
+optimization:
+  optimizer: "adamw"
+  lr: 0.0002  # Higher LR for larger batch size
+  weight_decay: 0.01
+  scheduler: "cosine"
+  min_lr: 0.000001
+  warmup_epochs: 5  # Warmup for stability
+
+# Training configuration - Optimized for A100 80GB
+batch_size: 32  # Large batch size for A100
+val_batch_size: 32
+epochs: 150  # More epochs for convergence
+num_workers: 8  # More workers for data loading
+device: "cuda"
+use_multi_gpu: false  # Single A100 is enough
+gradient_clip: 1.0
+mixed_precision: true  # Enable FP16 for faster training
+
+# Validation and saving
+val_frequency: 2  # Validate every 2 epochs
+save_frequency: 10
+save_best_only: false  # Save regular checkpoints
+
+# Pretrained weights (optional)
+# pretrained_path: "./lego_release/checkpoints/lego_pretrained.pth"
+
+# Evaluation metrics
+metrics:
+  - "pose_accuracy"
+  - "chamfer_distance"
+  - "mask_iou"
+  - "plan_accuracy"
+  - "assembly_feasibility"
+
+# Evaluation settings
+save_predictions: true
+num_visualization_samples: 20  # More visualization samples
+
+# A100-specific optimizations
+cuda_settings:
+  benchmark: true  # Enable cudnn benchmark
+  deterministic: false  # Disable for speed
+  amp: true  # Automatic mixed precision
+  tf32: true  # Enable TF32 for A100

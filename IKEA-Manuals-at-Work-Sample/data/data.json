@@ -1,0 +1,193 @@
+{
+  "STEFAN": {
+    "furniture_id": "STEFAN",
+    "category": "Chair",
+    "steps": [
+      {
+        "step_idx": 0,
+        "manual_parts": [
+          {
+            "part_id": "leg_001",
+            "instance_id": "leg_001_0"
+          },
+          {
+            "part_id": "seat_001",
+            "instance_id": "seat_001_0"
+          }
+        ],
+        "manual_connections": [
+          [
+            "leg_001",
+            "seat_001",
+            "dowel"
+          ]
+        ],
+        "manual_image": "Chair/STEFAN/step_000.png",
+        "base_assembly": [],
+        "aligned_frames": [
+          {
+            "frame_id": 0,
+            "poses": {
+              "leg_001": {
+                "rotation": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "translation": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "seat_001": {
+                "rotation": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "translation": [
+                  0,
+                  0,
+                  0.1
+                ]
+              }
+            },
+            "masks": {},
+            "camera": {
+              "intrinsic": [
+                500,
+                0,
+                256,
+                0,
+                500,
+                256,
+                0,
+                0,
+                1
+              ],
+              "extrinsic": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "step_idx": 1,
+        "manual_parts": [
+          {
+            "part_id": "leg_002",
+            "instance_id": "leg_002_0"
+          },
+          {
+            "part_id": "leg_003",
+            "instance_id": "leg_003_0"
+          }
+        ],
+        "manual_connections": [
+          [
+            "leg_002",
+            "seat_001",
+            "dowel"
+          ],
+          [
+            "leg_003",
+            "seat_001",
+            "dowel"
+          ]
+        ],
+        "manual_image": "Chair/STEFAN/step_001.png",
+        "base_assembly": [
+          "leg_001",
+          "seat_001"
+        ],
+        "aligned_frames": []
+      }
+    ],
+    "parts": {
+      "leg_001": {
+        "category": "leg",
+        "symmetry": "rotational_4"
+      },
+      "leg_002": {
+        "category": "leg",
+        "symmetry": "rotational_4"
+      },
+      "leg_003": {
+        "category": "leg",
+        "symmetry": "rotational_4"
+      },
+      "seat_001": {
+        "category": "seat",
+        "symmetry": "planar"
+      }
+    }
+  },
+  "LACK": {
+    "furniture_id": "LACK",
+    "category": "Table",
+    "steps": [
+      {
+        "step_idx": 0,
+        "manual_parts": [
+          {
+            "part_id": "tabletop_001",
+            "instance_id": "tabletop_001_0"
+          },
+          {
+            "part_id": "leg_001",
+            "instance_id": "leg_001_0"
+          }
+        ],
+        "manual_connections": [
+          [
+            "leg_001",
+            "tabletop_001",
+            "screw"
+          ]
+        ],
+        "manual_image": "Table/LACK/step_000.png",
+        "base_assembly": [],
+        "aligned_frames": []
+      }
+    ],
+    "parts": {
+      "tabletop_001": {
+        "category": "top",
+        "symmetry": "rotational_4"
+      },
+      "leg_001": {
+        "category": "leg",
+        "symmetry": "cylindrical"
+      }
+    }
+  }
+}

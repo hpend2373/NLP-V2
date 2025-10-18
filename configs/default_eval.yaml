@@ -1,0 +1,19 @@
+# Default evaluation configuration
+dataset:
+  load_meshes: true
+  max_parts_per_step: 10
+  image_size: [512, 512]
+  normalize_scale: true
+
+model:
+  device: cuda
+
+metrics:
+  - chamfer_distance
+  - pose_accuracy
+  - assembly_success
+
+save_predictions: true
+
+batch_size: 1
+num_workers: 4

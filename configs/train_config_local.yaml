@@ -1,0 +1,119 @@
+# IKEA MEPNet Training Configuration
+
+# Experiment settings
+exp_name: "ikea_mepnet_baseline"
+exp_dir: "./experiments/ikea_mepnet_baseline"
+use_wandb: false
+wandb_project: "ikea-mepnet"
+use_tensorboard: true
+
+# Model configuration
+model:
+  # Architecture
+  num_stacks: 2
+  num_blocks: 1
+  num_features: 256
+  image_size: [512, 512]
+
+  # Shape conditioning
+  use_shape_condition: true
+  shape_encoding_dim: 512
+  shape_encoder_type: "pointnet"  # "pointnet" or "voxel"
+
+  # Output heads
+  num_keypoints: 16
+  num_rotation_bins: 24
+  use_continuous_rotation: true
+  max_parts: 10
+  detect_parts: true
+  predict_mask: true
+  predict_depth: false
+
+  # Training
+  intermediate_supervision: true
+
+# Data configuration
+data:
+  root_dir: "./IKEA-Manuals-at-Work-Sample"  # Local sample dataset path
+
+  dataset_args:
+    load_meshes: false  # Disabled for local testing without meshes
+    load_videos: false
+    furniture_categories: ["Chair", "Table"]  # Start with subset
+    max_parts_per_step: 10
+    image_size: [512, 512]
+    normalize_scale: true
+    cache_meshes: true
+
+  augmentation:
+    # Basic augmentations - DISABLED for debugging
+    use_crop: false  # Disabled to keep consistent size
+    crop_size: [512, 512]
+    preserve_center: true
+    use_scale: false  # Disabled to keep consistent size
+    scale_range: [1.0, 1.0]
+    use_color_jitter: false  # Disabled for now
+    brightness: 0.0
+    contrast: 0.0
+    saturation: 0.0
+    hue: 0.0
+
+    # Manual-specific augmentations
+    use_manual_style: false  # Disabled for now
+    sketch_prob: 0.0
+    edge_prob: 0.0
+    binarize_prob: 0.0
+
+    # Pose augmentation
+    use_pose_noise: false
+    rot_noise_deg: 0.0
+    trans_noise_ratio: 0.0
+
+    # Normalization
+    normalize: true
+
+# Loss configuration
+loss:
+  keypoint_weight: 1.0
+  rotation_weight: 1.0
+  translation_weight: 1.0
+  mask_weight: 0.5
+  part_detection_weight: 0.5
+  depth_weight: 0.3
+  use_continuous_rotation: true
+  intermediate_supervision: true
+
+# Optimization configuration
+optimization:
+  optimizer: "adamw"  # "adam" or "adamw"
+  lr: 0.0001
+  weight_decay: 0.01
+  scheduler: "cosine"  # "cosine" or "reduce_on_plateau"
+  min_lr: 0.000001
+
+# Training configuration
+batch_size: 2  # Reduced for local testing
+val_batch_size: 2
+epochs: 2  # Just 2 epochs for testing
+num_workers: 0  # 0 for debugging
+device: "cpu"  # Use CPU for local testing
+use_multi_gpu: false
+gradient_clip: 1.0
+
+# Validation and saving
+val_frequency: 1
+save_frequency: 5
+
+# Pretrained weights (optional)
+# pretrained_path: "./lego_release/checkpoints/lego_pretrained.pth"
+
+# Evaluation metrics
+metrics:
+  - "pose_accuracy"
+  - "chamfer_distance"
+  - "mask_iou"
+  - "plan_accuracy"
+  - "assembly_feasibility"
+
+# Evaluation settings
+save_predictions: true

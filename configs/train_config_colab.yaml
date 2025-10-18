@@ -1,0 +1,116 @@
+# IKEA MEPNet Training Configuration for Colab GPU
+
+# Experiment settings
+exp_name: "ikea_mepnet_colab"
+exp_dir: "./experiments/ikea_mepnet_colab"
+use_wandb: true  # Enable for experiment tracking
+wandb_project: "ikea-mepnet"
+use_tensorboard: true
+
+# Model configuration
+model:
+  # Architecture
+  num_stacks: 2
+  num_blocks: 1
+  num_features: 256
+  image_size: [512, 512]
+
+  # Shape conditioning
+  use_shape_condition: true
+  shape_encoding_dim: 512
+  shape_encoder_type: "pointnet"
+
+  # Output heads
+  num_keypoints: 16
+  num_rotation_bins: 24
+  use_continuous_rotation: true
+  max_parts: 10
+  detect_parts: true
+  predict_mask: true
+  predict_depth: false
+
+  # Training
+  intermediate_supervision: true
+
+# Data configuration
+data:
+  root_dir: "./IKEA-Manuals-at-Work"
+
+  dataset_args:
+    load_meshes: true  # Enable for full training
+    load_videos: false
+    furniture_categories: null  # null = all categories
+    max_parts_per_step: 10
+    image_size: [512, 512]
+    normalize_scale: true
+    cache_meshes: true
+
+  augmentation:
+    # Basic augmentations
+    use_crop: true
+    crop_size: [480, 480]
+    preserve_center: true
+    use_scale: true
+    scale_range: [0.9, 1.1]
+    use_color_jitter: true
+    brightness: 0.2
+    contrast: 0.2
+    saturation: 0.2
+    hue: 0.1
+
+    # Manual-specific augmentations
+    use_manual_style: true
+    sketch_prob: 0.3
+    edge_prob: 0.2
+    binarize_prob: 0.1
+
+    # Pose augmentation
+    use_pose_noise: true
+    rot_noise_deg: 3.0
+    trans_noise_ratio: 0.03
+
+    # Normalization
+    normalize: true
+
+# Loss configuration
+loss:
+  keypoint_weight: 1.0
+  rotation_weight: 1.0
+  translation_weight: 1.0
+  mask_weight: 0.5
+  part_detection_weight: 0.5
+  depth_weight: 0.3
+  use_continuous_rotation: true
+  intermediate_supervision: true
+
+# Optimization configuration
+optimization:
+  optimizer: "adamw"
+  lr: 0.0001
+  weight_decay: 0.01
+  scheduler: "cosine"
+  min_lr: 0.000001
+
+# Training configuration
+batch_size: 8  # Adjust based on GPU memory
+val_batch_size: 8
+epochs: 100  # Full training
+num_workers: 2
+device: "cuda"
+use_multi_gpu: false
+gradient_clip: 1.0
+
+# Validation and saving
+val_frequency: 1
+save_frequency: 10
+
+# Evaluation metrics
+metrics:
+  - "pose_accuracy"
+  - "chamfer_distance"
+  - "mask_iou"
+  - "plan_accuracy"
+  - "assembly_feasibility"
+
+# Evaluation settings
+save_predictions: true
