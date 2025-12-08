@@ -1,0 +1,102 @@
+# Stage-B SFT Configuration: 6DoF Pose Refinement
+
+model:
+  name: "pose_refiner"
+  backbone: "resnet50"  # or "efficientnet_b0"
+  pretrained: true
+
+  # Architecture
+  visual_encoder:
+    input_channels: 3
+    crop_size: 224
+    full_image_size: 512
+    fusion_method: "concat"  # or "attention"
+
+  condition_encoder:
+    part_id_dim: 32
+    confidence_dim: 16
+    text_embed_dim: 768  # from BERT/RoBERTa
+    hidden_dim: 256
+
+  pose_head:
+    hidden_dims: [512, 256, 128]
+    rotation_repr: "6d"  # or "quat", "matrix"
+    use_uncertainty: true
+    uncertainty_mode: "aleatoric"  # epistemic or both
+
+data:
+  train_dataset: "ikea_pose_train"
+  val_dataset: "ikea_pose_val"
+  data_root: "/Users/minyeop/NLP/NLP-V2/IKEA-Manuals-at-Work"
+
+  # Visual encoder settings (needed by dataloader)
+  visual_encoder:
+    crop_size: 224
+    full_image_size: 512
+
+  # Stage-A integration
+  use_stage_a_predictions: true  # Use generated Rex-Omni predictions
+  stage_a_checkpoint: null  # Set when using Stage-A predictions
+  stage_a_confidence_threshold: 0.5
+
+  # Data augmentation
+  augmentation:
+    random_crop: true
+    color_jitter: true
+    random_rotation: 15  # degrees
+    random_scale: [0.8, 1.2]
+    gaussian_noise: 0.01
+
+  # Normalization
+  normalization:
+    mean: [0.485, 0.456, 0.406]
+    std: [0.229, 0.224, 0.225]
+
+training:
+  output_dir: "work_dirs/stage_b_sft"
+  num_train_epochs: 30  # Initial training (can continue later)
+  per_device_train_batch_size: 8  # Reduced for CPU/small GPU
+  per_device_eval_batch_size: 8
+  gradient_accumulation_steps: 1
+  dataloader_num_workers: 0  # Set to 0 for stability on macOS
+
+  # Learning rate
+  learning_rate: 1.0e-4
+  warmup_ratio: 0.1
+  weight_decay: 0.0001
+  lr_scheduler_type: "cosine"
+
+  # Optimization
+  optim: "adamw"
+  max_grad_norm: 1.0
+
+  # Saving & logging
+  save_strategy: "epoch"
+  save_total_limit: 5
+  logging_steps: 10
+  eval_strategy: "epoch"
+
+  # Mixed precision
+  fp16: true
+
+# Loss weights
+loss:
+  rotation_weight: 1.0
+  translation_weight: 1.0
+  uncertainty_weight: 0.1
+
+  # Loss type
+  rotation_loss: "geodesic"  # or "mse", "cosine"
+  translation_loss: "l1"  # or "l2", "smooth_l1"
+
+# Evaluation metrics
+metrics:
+  rotation_thresholds: [5, 10, 15, 30]  # degrees
+  translation_thresholds: [5, 10, 20, 50]  # mm
+  compute_mtc: true
+
+# Wandb
+wandb:
+  project: "rex-ikea"
+  run_name: "stage_b_sft"
+  log_model: true
