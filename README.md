@@ -136,26 +136,6 @@ python eval/eval_ikea.py \
 - **Plan Accuracy**: Part detection F1 and sequence accuracy
 - **Assembly Feasibility**: Collision-free, stable, connected
 
-## 🔍 Configuration
-
-Edit `configs/train_config.yaml` to customize:
-
-```yaml
-model:
-  use_continuous_rotation: true  # 6D vs discrete
-  max_parts: 10                  # Parts per step
-  shape_encoder_type: "pointnet" # Shape encoding
-
-data:
-  furniture_categories: ["Chair", "Table"]  # Furniture types
-  augmentation:
-    use_manual_style: true  # Manual-specific augmentations
-
-optimization:
-  lr: 0.0001
-  scheduler: "cosine"
-```
-
 ## 🛠️ Development
 
 ### Adding New Connection Types
@@ -185,24 +165,6 @@ class YourAugmentation(IKEATransform):
         return sample
 ```
 
-## 📝 Citation
-
-If you use this code, please cite:
-
-```bibtex
-@inproceedings{wang2022translating,
-  title={Translating a Visual LEGO Manual to a Machine-Executable Plan},
-  author={Wang, Ruocheng and others},
-  booktitle={ECCV},
-  year={2022}
-}
-
-@dataset{liu2024ikea,
-  title={IKEA Manuals at Work},
-  author={Liu, Yunong and others},
-  booktitle={NeurIPS Datasets and Benchmarks},
-  year={2024}
-}
 ```
 
 ## 📄 License
