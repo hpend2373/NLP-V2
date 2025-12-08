@@ -1,4 +1,4 @@
-# IKEA MEPNet Adapter
+# IKEA MEPNet Adapter + RexOmni
 
 ## Translating IKEA Furniture Assembly Manuals to Machine-Executable Plans
 
@@ -210,6 +210,7 @@ If you use this code, please cite:
 This project bridges two repositories with their respective licenses:
 - LEGO MEPNet: [Check original repository]
 - IKEA Manuals at Work: CC-BY-4.0
+- Rex-Omni
 
 ## 🤝 Acknowledgments
 
